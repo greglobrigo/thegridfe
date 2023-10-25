@@ -42,6 +42,12 @@ export default function Home() {
 
 
   return (
+    <>
+    {
+      errorMessage && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <p>{errorMessage}</p>
+      </div>
+    }
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="flex flex-col items-center justify-center mt-[100px]">
         <h1 className="text-[#1e1e1e] text-8xl text-center leading-[0.8] pb-[50px] font-bold
@@ -79,5 +85,6 @@ export default function Home() {
         </div>
       </div>
     </main>
+    </>
   )
 }
