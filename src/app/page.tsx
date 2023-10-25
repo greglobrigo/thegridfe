@@ -18,7 +18,7 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState('')
 
   const handleLogin = () => {
-    if(passwordRef.current?.value !== process.env.NEXT_PUBLIC_PASSWORD || emailRef.current?.value !== process.env.NEXT_PUBLIC_EMAIL) {
+    if(passwordRef.current?.value !== process.env.PASSWORD || emailRef.current?.value !== process.env.EMAIL) {
       setErrorMessage('Invalid Credentials')
       setTimeout(() => {
         setErrorMessage('')
@@ -27,7 +27,7 @@ export default function Home() {
     }
     axios({
       method: 'POST',
-      url: process.env.NEXT_PUBLIC_API_URL + 'login',
+      url: process.env.API_URL + 'login',
       data: {
         email: emailRef.current?.value,
         password: passwordRef.current?.value,
@@ -77,7 +77,7 @@ export default function Home() {
       const sDate = moment(dateRef.current?.value).format('MM/DD/YYYY')
       await axios({
         method: 'POST',
-        url: process.env.NEXT_PUBLIC_API_URL + 'file-download',
+        url: process.env.API_URL + 'file-download',
         data: {
           dateRange: [sDate]
         },
@@ -115,7 +115,7 @@ export default function Home() {
       const meDate = moment(endDateRef.current?.value).format('MM/DD/YYYY')
       await axios({
         method: 'POST',
-        url: process.env.NEXT_PUBLIC_API_URL + 'file-download',
+        url: process.env.API_URL + 'file-download',
         data: {
           dateRange: [msDate, meDate]
         },
