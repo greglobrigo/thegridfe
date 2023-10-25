@@ -27,3 +27,21 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+#start::-webkit-calendar-picker-indicator {
+  padding-left: 100px;
+  border: 1px dashed #3b82f6;
+  cursor: pointer;
+}
+
+#start2::-webkit-calendar-picker-indicator {
+  padding-left: 100px;
+  border: 1px dashed #3b82f6;
+  cursor: pointer;
+}
+
+#end::-webkit-calendar-picker-indicator {
+  padding-left: 100px;
+  border: 1px dashed #3b82f6;
+  cursor: pointer;
+}
