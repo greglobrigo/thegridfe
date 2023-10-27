@@ -62,6 +62,11 @@ export default function Home() {
     }).then((res) => {
       if (res.data.body.status === 'success') {
         setDailyMonitoringData(res.data.body.data)
+      } else {
+        setErrorMessage(res.data.body.error)
+        setTimeout(() => {
+          setErrorMessage('')
+        }, 2000)
       }
     }).catch((err) => {
       setErrorMessage(err)
@@ -81,6 +86,11 @@ export default function Home() {
           setFade(false)
           setTime(moment().tz('Asia/Manila').format('hh:mm A'))
           setSuccessMessage('')
+        }, 2000)
+      } else {
+        setErrorMessage(res.data.body.error)
+        setTimeout(() => {
+          setErrorMessage('')
         }, 2000)
       }
     }).catch((err) => {
