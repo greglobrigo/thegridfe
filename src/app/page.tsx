@@ -166,17 +166,17 @@ export default function Home() {
 
       <main className="flex min-h-screen flex-col items-center justify-between pt-5 pr-20 pl-20">
         <div className="flex flex-col items-center justify-center xs:mt-[0] md:mt-[100px]">
-          <h1 className="text-[#1e1e1e] xs:text-6xl md:text-8xl text-center leading-[0.8] xs:pb-[25px] md:pb-[50px] font-bold
+          <h1 className="text-[#1e1e1e] xs:text-6xl md:text-8xl text-center leading-[0.8] xs:pb-[10px] md:pb-[25px] font-bold
         ">
             The Grid POC
           </h1>
-          <h1 className="text-[#1e1e1e] xs:text-4xl md:text-7xl text-center leading-[0.8] xs:pb-[25px] md:pb-[50px] font-bold">
+          <h1 className="text-[#1e1e1e] xs:text-4xl md:text-7xl text-center leading-[0.8] xs:pb-[10px] md:pb-[25px] font-bold">
             by
           </h1>
           <Image src="/mosaic-logo.png" width={500} height={500} alt="mosaic-logo" />
           {
             !isLoggedIn &&
-            <div className="w-full max-w-xs bg-gradient-to-r from-blue-600 via-blue-400 to-white xs:mt-[50px] md:mt-[200px]">
+            <div className="w-full max-w-xs bg-gradient-to-r from-blue-600 via-blue-400 to-white xs:mt-[25px] md:mt-[200px]">
               <form className="bg-white shadow-md rounded px-8 pt-6 pb-8">
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -205,7 +205,7 @@ export default function Home() {
 
           {
             isLoggedIn &&
-            <div className="w-full max-w-xs bg-gradient-to-r from-blue-600 via-blue-400 to-white mt-[150px]">
+            <div className="w-full max-w-xs bg-gradient-to-r from-blue-600 via-blue-400 to-white mt-[100px]">
               <form className="bg-white shadow-md rounded px-8 pt-6 pb-8">
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2">
