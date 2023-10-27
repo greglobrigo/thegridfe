@@ -77,15 +77,15 @@ export default function Home() {
       if (res.data.body.status === 'success') {
         setDailyMonitoringData(res.data.body.data)
         setSuccessMessage('Refresh Success')
+        setTimeout(() => {
+          setFade(false)
+          setTime(moment().tz('Asia/Manila').format('hh:mm A'))
+          setSuccessMessage('')
+        }, 2000)
       }
     }).catch((err) => {
       setErrorMessage(err)
     })
-    setTimeout(() => {
-      setFade(false)
-      setTime(moment().tz('Asia/Manila').format('hh:mm A'))
-      setSuccessMessage('')
-    }, 2000)
   }
 
 
