@@ -1,8 +1,35 @@
 'use client'
 import Image from 'next/image'
-import { useState, useRef } from 'react'
+import { useState, useRef, useMemo } from 'react'
 import axios from 'axios'
 import moment from 'moment-timezone'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons'
+
+const branches = [
+  'TGFM01',
+  'TGFM02',
+  'TGFM03',
+  'TGFM04',
+  'TGFM05',
+  'TGFM06',
+  'TGFM07',
+  'TGFM08',
+  'TGFM09',
+  'TGFM10',
+  'TGFM11',
+  'TGFM12',
+  'TGFM13',
+  'TGFM14',
+  'TGFM15',
+  'TGFM16',
+  'TGFM17',
+  'TGFM18',
+  'TGFM19',
+  'TGFM20',
+  'TGFM21',
+  'TGFM22'
+]
 
 export default function Home() {
 
@@ -16,13 +43,65 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
+  const [dailyMonitoringData, setDailyMonitoringData] = useState<any>([])
+  const daysInMonth = moment().tz('Asia/Manila').daysInMonth()
+  const arrDaysInMonth = Array.from(Array(daysInMonth).keys())
+  const currentDate = moment().tz('Asia/Manila').format('MM/DD/YYYY')
+  const [time, setTime] = useState(moment().tz('Asia/Manila').format('hh:mm A'))
+  const [fade, setFade] = useState(false)
 
-  const handleLogin = () => {
-    if(passwordRef.current?.value !== process.env.NEXT_PUBLIC_PASSWORD || emailRef.current?.value !== process.env.NEXT_PUBLIC_EMAIL) {
+
+  const memoizedValue = useMemo(() => {
+    return dailyMonitoringData
+  }, [dailyMonitoringData])
+
+  const getDailyMonitoring = async () => {
+    axios({
+      method: 'POST',
+      url: process.env.NEXT_PUBLIC_API_URL + 'get-daily-monitoring',
+    }).then((res) => {
+      if (res.data.body.status === 'success') {
+        setDailyMonitoringData(res.data.body.data)
+      }
+    }).catch((err) => {
+      setErrorMessage(err)
+    })
+  }
+
+  const refreshMonitoring = async () => {
+    setFade(true)
+    axios({
+      method: 'POST',
+      url: process.env.NEXT_PUBLIC_API_URL + 'get-daily-monitoring',
+    }).then((res) => {
+      if (res.data.body.status === 'success') {
+        setDailyMonitoringData(res.data.body.data)
+        setSuccessMessage('Refresh Success')
+      }
+    }).catch((err) => {
+      setErrorMessage(err)
+    })
+    setTimeout(() => {
+      setFade(false)
+      setTime(moment().tz('Asia/Manila').format('hh:mm A'))
+      setSuccessMessage('')
+    }, 2000)
+  }
+
+
+  const handleLogin = async () => {
+    console.log(passwordRef.current?.value, emailRef.current?.value)
+    console.log(process.env.NEXT_PUBLIC_PASSWORD, process.env.NEXT_PUBLIC_EMAIL)
+    if (passwordRef.current?.value !== process.env.NEXT_PUBLIC_PASSWORD || emailRef.current?.value !== process.env.NEXT_PUBLIC_EMAIL) {
       setErrorMessage('Invalid Credentials')
-      setTimeout(() => {
+      let timeout = setTimeout(() => {
         setErrorMessage('')
-      }, 3000)
+      }, 2000)
+      if (timeout) {
+        timeout = setTimeout(() => {
+          setErrorMessage('')
+        }, 2000)
+      }
       return
     }
     axios({
@@ -48,8 +127,9 @@ export default function Home() {
           }, 2000)
         }
       }).catch((err) => {
-        alert(err)
+        setErrorMessage(err)
       })
+    await getDailyMonitoring()
   }
 
 
@@ -70,9 +150,6 @@ export default function Home() {
 
 
   const handleDownload = async () => {
-    console.log(dateRef.current?.value)
-    console.log(startDateRef.current?.value)
-    console.log(endDateRef.current?.value)
     if (downloadType === 'single') {
       const sDate = moment(dateRef.current?.value).format('MM/DD/YYYY')
       await axios({
@@ -154,29 +231,28 @@ export default function Home() {
   return (
     <>
       {
-        errorMessage && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-center w-screen absolute" role="alert">
+        errorMessage && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-center w-screen fixed top-0 z-10" role="alert">
           <p>{errorMessage}</p>
         </div>
       }
       {
-        successMessage && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded text-center absolute w-screen" role="alert">
+        successMessage && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded text-center fixed top-0 w-screen z-10" role="alert">
           <p>{successMessage}</p>
         </div>
       }
 
       <main className="flex min-h-screen flex-col items-center justify-around pr-20 pl-20 xs:mt-[0px]">
         <div className="flex flex-col items-center justify-center xs:mt-[0] md:mt-[25px]">
-          <h1 className="text-[#1e1e1e] xs:text-6xl md:text-8xl text-center leading-[0.8] xs:pb-[10px] md:pb-[25px] font-bold
-        ">
+          <h1 className="text-[#1e1e1e] xs:text-6xl md:text-8xl text-center leading-[0.8] xs:pb-[0px] md:pb-[25px] font-bold">
             The Grid POC
           </h1>
           <h1 className="text-[#1e1e1e] xs:text-4xl md:text-7xl text-center leading-[0.8] xs:pb-[10px] md:pb-[25px] font-bold">
             by
           </h1>
-          <Image src="/mosaic-logo.png" width={500} height={500} alt="mosaic-logo" />
+          <Image priority src="/mosaic-logo.png" width={500} height={500} alt="mosaic-logo" className="w-auto h-auto" />
           {
             !isLoggedIn &&
-            <div className="w-full max-w-xs bg-gradient-to-r from-blue-600 via-blue-400 to-white xs:mt-[25px] md:mt-[25px]">
+            <div className="w-full max-w-xs bg-gradient-to-r from-blue-600 via-blue-400 to-white xs:mt-[0px] md:mt-[25px]">
               <form className="bg-white shadow-md rounded px-8 pt-6 pb-8">
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -268,6 +344,62 @@ export default function Home() {
           }
         </div>
       </main>
+
+      {
+        isLoggedIn &&
+        <>
+          <div className={`inline-block flex-col align-middle items-center text-center justify-center min-h-screen px-auto w-full ${fade ? 'opacity-50 transition duration-1000 ease-in-out' : ''}`}>
+            <div className="flex flex-col text-4xl font-bold text-[white] pb-4 pt-8 w-fit-content mx-auto bg-[#053B66] w-[1313px]">
+              <div className="flex flex-row items-center justify-center">
+                <span className="text-4xl font-bold text-[white] pr-4">
+                Data IQ The Grid Monitoring UI
+                </span>
+                <div className="flex flex-row items-center justify-center pt-4">
+                  <button onClick={refreshMonitoring} className="bg-[#0066ffb7] hover:bg-[#00c3ffb7] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-4 text-xl" type="button">
+                    Refresh <FontAwesomeIcon icon={faArrowsRotate} style={{ color: "#ffffff", }} className={`${fade ? 'animate-spin' : ''}`} />
+                  </button>
+                </div>
+              </div>
+              <span className="text-xl font-bold text-[white] pt-2"> Month of {moment().tz('Asia/Manila').format('MMMM, YYYY')}. Updated as of {time} PH Time</span>
+            </div>
+            <div className={`items-center justify-center inline-block px-auto`}>
+              <table className="table-auto overflow-x-scroll border border-black">
+                <thead className="border border-black">
+                  <tr className="border border-black">
+                    <th className="bg-[#053B66] border border-black text-center min-w-[40px] text-white">Stall</th>
+                    {arrDaysInMonth.map((day) => {
+                      return (
+                        <th key={day} className="bg-[#053B66] border border-black text-center min-w-[40px] text-white">{day + 1}</th>
+                      )
+                    })
+                    }
+                  </tr>
+                </thead>
+                <tbody className="border border-black">
+                  {
+                    branches.map((branch) => {
+                      return (
+                        <tr key={branch} className="border border-black">
+                          <th className="bg-[#053B66] border border-black text-center min-w-[40px] text-white">{branch}</th>
+                          {
+                            memoizedValue.map((data: any) => {
+                              return (
+                                data.stall === branch &&
+                                <td key={data.id} className={`border border-[black] ${data.uploaded ? "bg-[#00FF00]"
+                                  : moment(data.date).isAfter(moment(currentDate)) ? 'bg-[#FFFF00] text-[black] font-semibold text-center' : 'bg-[#FF0000]'}`}> {moment(data.date).isAfter(moment(currentDate)) ? 'TBA' : null} </td>
+                              )
+                            })
+                          }
+                        </tr>
+                      )
+                    })
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      }
 
     </>
   )
