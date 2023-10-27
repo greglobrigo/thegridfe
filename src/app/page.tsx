@@ -165,7 +165,7 @@ export default function Home() {
       }
 
       <main className="flex min-h-screen flex-col items-center justify-between pr-20 pl-20 xs:mt-[25px] md:mt-[0px]">
-        <div className="flex flex-col items-center justify-center xs:mt-[0] md:mt-[100px]">
+        <div className="flex flex-col items-center justify-center xs:mt-[0] md:mt-[25px]">
           <h1 className="text-[#1e1e1e] xs:text-6xl md:text-8xl text-center leading-[0.8] xs:pb-[10px] md:pb-[25px] font-bold
         ">
             The Grid POC
@@ -258,7 +258,7 @@ export default function Home() {
 
                 <div className="flex flex-col items-center justify-center pt-2 mb-4 cursor-pointer">
                   <button onClick={handleDownload} disabled={!downloadSelected}
-                    className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-4 ${!downloadSelected ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${!downloadSelected ? 'opacity-50 cursor-not-allowed' : ''}`}
                     type="button">
                     Download
                   </button>
