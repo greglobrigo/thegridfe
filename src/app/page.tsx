@@ -164,7 +164,7 @@ export default function Home() {
         </div>
       }
 
-      <main className="flex min-h-screen flex-col items-center justify-between pr-20 pl-20">
+      <main className="flex min-h-screen flex-col items-center justify-between pr-20 pl-20 xs:mt-[25px] md:mt-[0px]">
         <div className="flex flex-col items-center justify-center xs:mt-[0] md:mt-[100px]">
           <h1 className="text-[#1e1e1e] xs:text-6xl md:text-8xl text-center leading-[0.8] xs:pb-[10px] md:pb-[25px] font-bold
         ">
