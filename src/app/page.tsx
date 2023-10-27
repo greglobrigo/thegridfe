@@ -90,8 +90,6 @@ export default function Home() {
 
 
   const handleLogin = async () => {
-    console.log(passwordRef.current?.value, emailRef.current?.value)
-    console.log(process.env.NEXT_PUBLIC_PASSWORD, process.env.NEXT_PUBLIC_EMAIL)
     if (passwordRef.current?.value !== process.env.NEXT_PUBLIC_PASSWORD || emailRef.current?.value !== process.env.NEXT_PUBLIC_EMAIL) {
       setErrorMessage('Invalid Credentials')
       let timeout = setTimeout(() => {
