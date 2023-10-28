@@ -370,8 +370,8 @@ export default function Home() {
               </div>
               <span className="text-xl font-bold text-[white] pt-2"> Month of {moment().tz('Asia/Manila').format('MMMM, YYYY')}. Updated as of {time} PH Time</span>
             </div>
-            <div className={`items-center justify-center inline-block px-auto`}>
-              <table className="table-auto overflow-x-scroll border border-black">
+            <div className="items-center justify-center inline-block px-auto">
+              <table className="table-auto overflow-x-scroll border border-black min-w-[1313px]">
                 <thead className="border border-black">
                   <tr className="border border-black">
                     <th className="bg-[#053B66] border border-black text-center min-w-[40px] text-white">Stall</th>
