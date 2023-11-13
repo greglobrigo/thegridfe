@@ -273,7 +273,7 @@ export default function Home() {
                   <label className="block text-gray-700 text-sm font-bold mb-2">
                     Password
                   </label>
-                  <input name="password" ref={passwordRef}
+                  <input name="password" ref={passwordRef} onKeyDown={(e) => {e.key === 'Enter' && handleLogin()}}
                     className="shadow appearance-none borde rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="******************" />
                 </div>
                 <div className="flex flex-col items-center justify-center mb-4 cursor-pointer">
