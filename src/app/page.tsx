@@ -58,7 +58,7 @@ export default function Home() {
   const getDailyMonitoring = async () => {
     axios({
       method: 'POST',
-      url: process.env.NEXT_PUBLIC_API_URL + 'get-daily-monitoring',
+      url: process.env.NEXT_PUBLIC_API_URL_PRD + 'get-daily-monitoring',
     }).then((res) => {
       if (res.data.body.status === 'success') {
         setDailyMonitoringData(res.data.body.data)
@@ -77,7 +77,7 @@ export default function Home() {
     setFade(true)
     axios({
       method: 'POST',
-      url: process.env.NEXT_PUBLIC_API_URL + 'get-daily-monitoring',
+      url: process.env.NEXT_PUBLIC_API_URL_PRD + 'get-daily-monitoring',
     }).then((res) => {
       if (res.data.body.status === 'success') {
         setDailyMonitoringData(res.data.body.data)
@@ -114,7 +114,7 @@ export default function Home() {
     }
     axios({
       method: 'POST',
-      url: process.env.NEXT_PUBLIC_API_URL + 'login',
+      url: process.env.NEXT_PUBLIC_API_URL_PRD + 'login',
       data: {
         email: emailRef.current?.value,
         password: passwordRef.current?.value,
@@ -162,7 +162,7 @@ export default function Home() {
       const sDate = moment(dateRef.current?.value).format('MM/DD/YYYY')
       await axios({
         method: 'POST',
-        url: process.env.NEXT_PUBLIC_API_URL + 'file-download',
+        url: process.env.NEXT_PUBLIC_API_URL_PRD + 'file-download',
         data: {
           dateRange: [sDate]
         },
@@ -200,7 +200,7 @@ export default function Home() {
       const meDate = moment(endDateRef.current?.value).format('MM/DD/YYYY')
       await axios({
         method: 'POST',
-        url: process.env.NEXT_PUBLIC_API_URL + 'file-download',
+        url: process.env.NEXT_PUBLIC_API_URL_PRD + 'file-download',
         data: {
           dateRange: [msDate, meDate]
         },
