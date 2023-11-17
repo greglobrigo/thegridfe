@@ -28,7 +28,7 @@ const branches = [
   'TGFM19',
   'TGFM20',
   'TGFM21',
-  'TGFM22'
+  'TGFM22',
 ]
 
 export default function Home() {
