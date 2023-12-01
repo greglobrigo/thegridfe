@@ -45,9 +45,10 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState('')
   const [dailyMonitoringData, setDailyMonitoringData] = useState<any>([])
   const [daysInMonth, setDaysInMonth] = useState(moment().tz('Asia/Manila').daysInMonth())
+  const [selectedMonth, setSelectedMonth] = useState(moment().tz('Asia/Manila').format('MMMM, YYYY'))
   const arrDaysInMonth = Array.from(Array(daysInMonth).keys())
   const currentDate = moment().tz('Asia/Manila').format('MM/DD/YYYY')
-  const currentMonth = moment().tz('Asia/Manila').format('MMMM')
+  const currentMonthYear = moment().tz('Asia/Manila').format('MMMM, YYYY')
   const [time, setTime] = useState(moment().tz('Asia/Manila').format('hh:mm A'))
   const [fade, setFade] = useState(false)
 
@@ -74,12 +75,15 @@ export default function Home() {
     })
   }
 
-  const getDailyMonitoringV2 = async (month: string) => {
+  const getDailyMonitoringV2 = async (monthYear: string) => {
+    const month = moment(monthYear, 'MMMM, YYYY').format('MMMM')
+    const year = moment(monthYear, 'MMMM, YYYY').format('YYYY')
     axios({
       method: 'POST',
       url: process.env.NEXT_PUBLIC_API_URL_PRD + 'get-daily-monitoring-v2',
       data: {
-        month: month
+        month: month,
+        year: year
       }
     }).then((res) => {
       if (res.data.body.status === 'success') {
@@ -102,10 +106,16 @@ export default function Home() {
   }
 
   const refreshMonitoring = async () => {
+    const month = moment(selectedMonth, 'MMMM, YYYY').format('MMMM')
+    const year = moment(selectedMonth, 'MMMM, YYYY').format('YYYY')
     setFade(true)
     axios({
       method: 'POST',
-      url: process.env.NEXT_PUBLIC_API_URL_PRD + 'get-daily-monitoring',
+      url: process.env.NEXT_PUBLIC_API_URL_PRD + 'get-daily-monitoring-v2',
+      data: {
+        month: month,
+        year: year
+      }
     }).then((res) => {
       if (res.data.body.status === 'success') {
         setDailyMonitoringData(res.data.body.data)
@@ -397,10 +407,10 @@ export default function Home() {
                 </div>
               </div>
               <span className="text-xl font-bold text-[white] pt-2"> Month of
-              <select onChange={(e) => getDailyMonitoringV2(e.target.value)} name="type" id="type" className="py-1 px-3 text-white leading-tight focus:outline-none focus:shadow-outline cursor-pointer bg-[#053B66] mx-2">
-                    <option className="rounded-b-none cursor-pointer">{currentMonth}</option>
-                    <option className="rounded-b-none cursor-pointer">{moment().tz('Asia/Manila').subtract(1, 'months').format('MMMM')}</option>
-                    <option className="rounded-b-none cursor-pointer">{moment().tz('Asia/Manila').subtract(2, 'months').format('MMMM')}</option>
+              <select onChange={(e) => {getDailyMonitoringV2(e.target.value); setSelectedMonth(e.target.value)}} name="type" id="type" className="py-1 px-3 text-white leading-tight focus:outline-none focus:shadow-outline cursor-pointer bg-[#053B66] mx-2">
+                    <option className="rounded-b-none cursor-pointer">{currentMonthYear}</option>
+                    <option className="rounded-b-none cursor-pointer">{moment().tz('Asia/Manila').subtract(1, 'months').format('MMMM, YYYY')}</option>
+                    <option className="rounded-b-none cursor-pointer">{moment().tz('Asia/Manila').subtract(2, 'months').format('MMMM, YYYY')}</option>
               </select>
               Updated as of {time} PH Time</span>
             </div>
