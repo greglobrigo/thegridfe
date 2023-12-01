@@ -32,7 +32,6 @@ const branches = [
 ]
 
 export default function Home() {
-  console.log(process.env.NEXT_PUBLIC_API_URL)
 
   const emailRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
