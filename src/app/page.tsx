@@ -44,9 +44,10 @@ export default function Home() {
   const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [dailyMonitoringData, setDailyMonitoringData] = useState<any>([])
-  const daysInMonth = moment().tz('Asia/Manila').daysInMonth()
+  const [daysInMonth, setDaysInMonth] = useState(moment().tz('Asia/Manila').daysInMonth())
   const arrDaysInMonth = Array.from(Array(daysInMonth).keys())
   const currentDate = moment().tz('Asia/Manila').format('MM/DD/YYYY')
+  const currentMonth = moment().tz('Asia/Manila').format('MMMM')
   const [time, setTime] = useState(moment().tz('Asia/Manila').format('hh:mm A'))
   const [fade, setFade] = useState(false)
 
@@ -58,10 +59,37 @@ export default function Home() {
   const getDailyMonitoring = async () => {
     axios({
       method: 'POST',
-      url: process.env.NEXT_PUBLIC_API_URL + 'get-daily-monitoring',
+      url: process.env.NEXT_PUBLIC_API_URL_PRD + 'get-daily-monitoring',
     }).then((res) => {
       if (res.data.body.status === 'success') {
         setDailyMonitoringData(res.data.body.data)
+      } else {
+        setErrorMessage(res.data.body.error)
+        setTimeout(() => {
+          setErrorMessage('')
+        }, 2000)
+      }
+    }).catch((err) => {
+      setErrorMessage(err)
+    })
+  }
+
+  const getDailyMonitoringV2 = async (month: string) => {
+    axios({
+      method: 'POST',
+      url: process.env.NEXT_PUBLIC_API_URL + 'get-daily-monitoring-v2',
+      data: {
+        month: month
+      }
+    }).then((res) => {
+      if (res.data.body.status === 'success') {
+        setDailyMonitoringData(res.data.body.data)
+        setTime(moment().tz('Asia/Manila').format('hh:mm A'))
+        setDaysInMonth(moment(month, 'MMMM').daysInMonth())
+        setSuccessMessage('Data Fetching Success')
+        setTimeout(() => {
+          setSuccessMessage('')
+        }, 2000)
       } else {
         setErrorMessage(res.data.body.error)
         setTimeout(() => {
@@ -77,7 +105,7 @@ export default function Home() {
     setFade(true)
     axios({
       method: 'POST',
-      url: process.env.NEXT_PUBLIC_API_URL + 'get-daily-monitoring',
+      url: process.env.NEXT_PUBLIC_API_URL_PRD + 'get-daily-monitoring',
     }).then((res) => {
       if (res.data.body.status === 'success') {
         setDailyMonitoringData(res.data.body.data)
@@ -114,7 +142,7 @@ export default function Home() {
     }
     axios({
       method: 'POST',
-      url: process.env.NEXT_PUBLIC_API_URL + 'login',
+      url: process.env.NEXT_PUBLIC_API_URL_PRD + 'login',
       data: {
         email: emailRef.current?.value,
         password: passwordRef.current?.value,
@@ -162,7 +190,7 @@ export default function Home() {
       const sDate = moment(dateRef.current?.value).format('MM/DD/YYYY')
       await axios({
         method: 'POST',
-        url: process.env.NEXT_PUBLIC_API_URL + 'file-download',
+        url: process.env.NEXT_PUBLIC_API_URL_PRD + 'file-download',
         data: {
           dateRange: [sDate]
         },
@@ -200,7 +228,7 @@ export default function Home() {
       const meDate = moment(endDateRef.current?.value).format('MM/DD/YYYY')
       await axios({
         method: 'POST',
-        url: process.env.NEXT_PUBLIC_API_URL + 'file-download',
+        url: process.env.NEXT_PUBLIC_API_URL_PRD + 'file-download',
         data: {
           dateRange: [msDate, meDate]
         },
@@ -368,7 +396,13 @@ export default function Home() {
                   </button>
                 </div>
               </div>
-              <span className="text-xl font-bold text-[white] pt-2"> Month of {moment().tz('Asia/Manila').format('MMMM, YYYY')}. Updated as of {time} PH Time</span>
+              <span className="text-xl font-bold text-[white] pt-2"> Month of
+              <select onChange={(e) => getDailyMonitoringV2(e.target.value)} name="type" id="type" className="py-1 px-3 text-white leading-tight focus:outline-none focus:shadow-outline cursor-pointer bg-[#053B66] mx-2">
+                    <option className="rounded-b-none cursor-pointer">{currentMonth}</option>
+                    <option className="rounded-b-none cursor-pointer">{moment().tz('Asia/Manila').subtract(1, 'months').format('MMMM')}</option>
+                    <option className="rounded-b-none cursor-pointer">{moment().tz('Asia/Manila').subtract(2, 'months').format('MMMM')}</option>
+              </select>
+              Updated as of {time} PH Time</span>
             </div>
             <div className="items-center justify-center inline-block px-auto">
               <table className="table-auto overflow-x-scroll border border-black min-w-[1313px]">
