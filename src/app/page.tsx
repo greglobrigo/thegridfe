@@ -32,6 +32,7 @@ const branches = [
 ]
 
 export default function Home() {
+  console.log(process.env.NEXT_PUBLIC_API_URL)
 
   const emailRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
@@ -44,9 +45,10 @@ export default function Home() {
   const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [dailyMonitoringData, setDailyMonitoringData] = useState<any>([])
-  const daysInMonth = moment().tz('Asia/Manila').daysInMonth()
+  const [daysInMonth, setDaysInMonth] = useState(moment().tz('Asia/Manila').daysInMonth())
   const arrDaysInMonth = Array.from(Array(daysInMonth).keys())
   const currentDate = moment().tz('Asia/Manila').format('MM/DD/YYYY')
+  const currentMonth = moment().tz('Asia/Manila').format('MMMM')
   const [time, setTime] = useState(moment().tz('Asia/Manila').format('hh:mm A'))
   const [fade, setFade] = useState(false)
 
@@ -62,6 +64,33 @@ export default function Home() {
     }).then((res) => {
       if (res.data.body.status === 'success') {
         setDailyMonitoringData(res.data.body.data)
+      } else {
+        setErrorMessage(res.data.body.error)
+        setTimeout(() => {
+          setErrorMessage('')
+        }, 2000)
+      }
+    }).catch((err) => {
+      setErrorMessage(err)
+    })
+  }
+
+  const getDailyMonitoringV2 = async (month: string) => {
+    axios({
+      method: 'POST',
+      url: process.env.NEXT_PUBLIC_API_URL + 'get-daily-monitoring-v2',
+      data: {
+        month: month
+      }
+    }).then((res) => {
+      if (res.data.body.status === 'success') {
+        setDailyMonitoringData(res.data.body.data)
+        setTime(moment().tz('Asia/Manila').format('hh:mm A'))
+        setDaysInMonth(moment(month, 'MMMM').daysInMonth())
+        setSuccessMessage('Data Fetching Success')
+        setTimeout(() => {
+          setSuccessMessage('')
+        }, 2000)
       } else {
         setErrorMessage(res.data.body.error)
         setTimeout(() => {
@@ -252,7 +281,7 @@ export default function Home() {
       <main className="flex min-h-screen flex-col items-center justify-around pr-20 pl-20 xs:mt-[0px]">
         <div className="flex flex-col items-center justify-center xs:mt-[0] md:mt-[25px]">
           <h1 className="text-[#1e1e1e] xs:text-6xl md:text-8xl text-center leading-[0.8] xs:pb-[0px] md:pb-[25px] font-bold">
-            The Grid POC
+            The GRID Data IQ
           </h1>
           <h1 className="text-[#1e1e1e] xs:text-4xl md:text-7xl text-center leading-[0.8] xs:pb-[10px] md:pb-[25px] font-bold">
             by
@@ -368,7 +397,13 @@ export default function Home() {
                   </button>
                 </div>
               </div>
-              <span className="text-xl font-bold text-[white] pt-2"> Month of {moment().tz('Asia/Manila').format('MMMM, YYYY')}. Updated as of {time} PH Time</span>
+              <span className="text-xl font-bold text-[white] pt-2"> Month of
+              <select onChange={(e) => getDailyMonitoringV2(e.target.value)} name="type" id="type" className="py-1 px-3 text-white leading-tight focus:outline-none focus:shadow-outline cursor-pointer bg-[#053B66] mx-2">
+                    <option className="rounded-b-none cursor-pointer">{currentMonth}</option>
+                    <option className="rounded-b-none cursor-pointer">{moment().tz('Asia/Manila').subtract(1, 'months').format('MMMM')}</option>
+                    <option className="rounded-b-none cursor-pointer">{moment().tz('Asia/Manila').subtract(2, 'months').format('MMMM')}</option>
+              </select>
+              Updated as of {time} PH Time</span>
             </div>
             <div className="items-center justify-center inline-block px-auto">
               <table className="table-auto overflow-x-scroll border border-black min-w-[1313px]">
