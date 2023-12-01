@@ -58,7 +58,7 @@ export default function Home() {
   const getDailyMonitoring = async () => {
     axios({
       method: 'POST',
-      url: process.env.NEXT_PUBLIC_API_URL_PRD + 'get-daily-monitoring',
+      url: process.env.NEXT_PUBLIC_API_URL + 'get-daily-monitoring',
     }).then((res) => {
       if (res.data.body.status === 'success') {
         setDailyMonitoringData(res.data.body.data)
@@ -77,7 +77,7 @@ export default function Home() {
     setFade(true)
     axios({
       method: 'POST',
-      url: process.env.NEXT_PUBLIC_API_URL_PRD + 'get-daily-monitoring',
+      url: process.env.NEXT_PUBLIC_API_URL + 'get-daily-monitoring',
     }).then((res) => {
       if (res.data.body.status === 'success') {
         setDailyMonitoringData(res.data.body.data)
@@ -114,7 +114,7 @@ export default function Home() {
     }
     axios({
       method: 'POST',
-      url: process.env.NEXT_PUBLIC_API_URL_PRD + 'login',
+      url: process.env.NEXT_PUBLIC_API_URL + 'login',
       data: {
         email: emailRef.current?.value,
         password: passwordRef.current?.value,
@@ -162,7 +162,7 @@ export default function Home() {
       const sDate = moment(dateRef.current?.value).format('MM/DD/YYYY')
       await axios({
         method: 'POST',
-        url: process.env.NEXT_PUBLIC_API_URL_PRD + 'file-download',
+        url: process.env.NEXT_PUBLIC_API_URL + 'file-download',
         data: {
           dateRange: [sDate]
         },
@@ -200,7 +200,7 @@ export default function Home() {
       const meDate = moment(endDateRef.current?.value).format('MM/DD/YYYY')
       await axios({
         method: 'POST',
-        url: process.env.NEXT_PUBLIC_API_URL_PRD + 'file-download',
+        url: process.env.NEXT_PUBLIC_API_URL + 'file-download',
         data: {
           dateRange: [msDate, meDate]
         },
@@ -252,7 +252,7 @@ export default function Home() {
       <main className="flex min-h-screen flex-col items-center justify-around pr-20 pl-20 xs:mt-[0px]">
         <div className="flex flex-col items-center justify-center xs:mt-[0] md:mt-[25px]">
           <h1 className="text-[#1e1e1e] xs:text-6xl md:text-8xl text-center leading-[0.8] xs:pb-[0px] md:pb-[25px] font-bold">
-            The Grid POC
+          The GRID Data IQ
           </h1>
           <h1 className="text-[#1e1e1e] xs:text-4xl md:text-7xl text-center leading-[0.8] xs:pb-[10px] md:pb-[25px] font-bold">
             by
