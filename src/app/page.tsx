@@ -77,7 +77,7 @@ export default function Home() {
   const getDailyMonitoringV2 = async (month: string) => {
     axios({
       method: 'POST',
-      url: process.env.NEXT_PUBLIC_API_URL + 'get-daily-monitoring-v2',
+      url: process.env.NEXT_PUBLIC_API_URL_PRD + 'get-daily-monitoring-v2',
       data: {
         month: month
       }
